@@ -2,11 +2,22 @@ import React, { useContext } from "react";
 import { TaskListContext } from "../Context/TaskListContext";
 
 const Task = ({ task }) => {
-  const { removeTask, findItem } = useContext(TaskListContext);
+  const { removeTask, findItem, toggleBlock } = useContext(TaskListContext);
+  const styleBlocked = task.blocked
+    ? { backgroundColor: "Orange", color: "black" }
+    : null;
   return (
     <li className="list-item">
-      <span className="task-title">{task.title}</span>
+      <span className="task-title" style={styleBlocked}>
+        {task.title}
+      </span>
       <div>
+        <button
+          className="btn-ban task-btn"
+          onClick={() => toggleBlock(task.id)}
+        >
+          <i className="fa fa-ban" aria-hidden="true"></i>
+        </button>
         <button
           onClick={() => removeTask(task.id)}
           className="btn-delete task-btn"

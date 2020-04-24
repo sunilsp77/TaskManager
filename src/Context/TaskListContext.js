@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const TaskListContext = createContext();
 
-const TaskListContextProvider = props => {
+const TaskListContextProvider = (props) => {
   const initialState = JSON.parse(localStorage.getItem("tasks")) || [];
   const [tasks, setTasks] = useState(initialState);
 
@@ -13,25 +13,38 @@ const TaskListContextProvider = props => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = title => {
-    setTasks([...tasks, { title, id: uuidv4() }]);
+  const addTask = (title) => {
+    setTasks([...tasks, { title, id: uuidv4(), blocked: false }]);
   };
 
-  const removeTask = id => {
-    setTasks(tasks.filter(task => task.id !== id));
+  const removeTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const toggleBlock = (id) => {
+    const taskToToggle = tasks.find((task) => task.id === id);
+    taskToToggle.blocked = !taskToToggle.blocked;
+
+    const newTasks = tasks.map((task) =>
+      task.id === id ? taskToToggle : task
+    );
+
+    setTasks(newTasks);
   };
 
   const clearList = () => {
     setTasks([]);
   };
 
-  const findItem = id => {
-    const item = tasks.find(task => task.id === id);
+  const findItem = (id) => {
+    const item = tasks.find((task) => task.id === id);
     setEditItem(item);
   };
 
   const editTask = (title, id) => {
-    const newTasks = tasks.map(task => (task.id === id ? { title, id } : task));
+    const newTasks = tasks.map((task) =>
+      task.id === id ? { title, id } : task
+    );
 
     setTasks(newTasks);
     setEditItem(null);
@@ -46,7 +59,8 @@ const TaskListContextProvider = props => {
         clearList,
         findItem,
         editTask,
-        editItem
+        editItem,
+        toggleBlock,
       }}
     >
       {props.children}
