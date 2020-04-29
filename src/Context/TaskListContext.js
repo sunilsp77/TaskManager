@@ -77,6 +77,15 @@ const TaskListContextProvider = (props) => {
 
   const clearList = () => {
     setTasks([]);
+    axios
+      .delete("./tasks.json")
+      .then((response) => {
+        toast.success("Cleared list successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Could not clear the list from DB");
+      });
   };
 
   const findItem = (id) => {

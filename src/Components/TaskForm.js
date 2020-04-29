@@ -9,11 +9,11 @@ const TaskForm = () => {
 
   const [title, setTitle] = useState("");
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!editItem) {
       addTask(title);
@@ -23,7 +23,7 @@ const TaskForm = () => {
     }
   };
 
-  const handleClear = e => {
+  const handleClear = (e) => {
     e.preventDefault();
     clearList();
   };
@@ -36,13 +36,14 @@ const TaskForm = () => {
       setTitle("");
     }
   }, [editItem]);
+
   return (
     <form onSubmit={handleSubmit} className="form">
       <input
         id="task-input"
         onChange={handleChange}
         value={title}
-        type="text"
+        type="search"
         className="task-input"
         placeholder="Add Task..."
         required
@@ -51,8 +52,14 @@ const TaskForm = () => {
         <button type="submit" className="btn add-task-btn">
           {editItem ? "Edit Task" : "Add Task"}
         </button>
-        <button onClick={handleClear} className="btn clear-btn">
-          Clear
+        <button
+          onClick={(e) => {
+            if (window.confirm("Are you sure you wish to clear the list?"))
+              handleClear(e);
+          }}
+          className="btn clear-btn"
+        >
+          Clear List
         </button>
       </div>
     </form>
