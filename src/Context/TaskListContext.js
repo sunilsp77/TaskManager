@@ -1,35 +1,78 @@
 import React, { createContext, useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+import axios from "../../src/axios-instance";
+import { toast } from "react-toastify";
 
 export const TaskListContext = createContext();
 
 const TaskListContextProvider = (props) => {
-  const initialState = JSON.parse(localStorage.getItem("tasks")) || [];
-  const [tasks, setTasks] = useState(initialState);
+  // const initialState = JSON.parse(localStorage.getItem("tasks")) || [];
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    // localStorage.setItem("tasks", JSON.stringify(tasks));
+    axios
+      .get("/tasks.json")
+      .then((res) => {
+        const fetchedTasks = [];
+
+        for (let key in res.data) {
+          fetchedTasks.push({
+            ...res.data[key],
+            id: key,
+          });
+        }
+        setTasks(fetchedTasks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const addTask = (title) => {
-    setTasks([...tasks, { title, id: uuidv4(), blocked: false }]);
+    setLoading(true);
+    const newTask = { title, blocked: false };
+    axios
+      .post("./tasks.json", newTask)
+      .then((response) => {
+        newTask.id = response.data.name;
+        setLoading(false);
+        setTasks([...tasks, newTask]);
+        toast.success("Task Added successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to add task in DB");
+      });
   };
 
   const removeTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
+    axios
+      .delete("./tasks/" + id + ".json")
+      .then((response) => {
+        toast.success("Task deleted successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Task could not be deleted from DB");
+      });
   };
 
   const toggleBlock = (id) => {
     const taskToToggle = tasks.find((task) => task.id === id);
     taskToToggle.blocked = !taskToToggle.blocked;
-
     const newTasks = tasks.map((task) =>
       task.id === id ? taskToToggle : task
     );
-
     setTasks(newTasks);
+    axios
+      .put("./tasks/" + id + ".json", taskToToggle)
+      .then()
+      .catch((err) => console.log(err));
   };
 
   const clearList = () => {
@@ -43,16 +86,21 @@ const TaskListContextProvider = (props) => {
 
   const editTask = (title, id) => {
     const newTasks = tasks.map((task) =>
-      task.id === id ? { title, id } : task
+      task.id === id ? { title, id, blocked: task.blocked } : task
     );
 
     setTasks(newTasks);
     setEditItem(null);
+    axios
+      .put("./tasks/" + id + "/title.json", `"${title}"`)
+      .then((res) => toast.success("Task updated successfully"))
+      .catch((err) => console.log(err));
   };
 
   return (
     <TaskListContext.Provider
       value={{
+        loading,
         tasks,
         addTask,
         removeTask,

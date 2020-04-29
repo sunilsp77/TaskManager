@@ -3,12 +3,12 @@ import { TaskListContext } from "../Context/TaskListContext";
 import Task from "./Task";
 
 const TaskList = () => {
-  const { tasks } = useContext(TaskListContext);
+  const { tasks, loading } = useContext(TaskListContext);
   return (
     <div>
       {tasks.length ? (
         <ul className="list">
-          {tasks.map(task => (
+          {tasks.map((task) => (
             <Task task={task} key={task.id} />
           ))}
         </ul>
