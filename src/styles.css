@@ -94,6 +94,11 @@
 .buttons {
   display: flex;
 }
+button:disabled,
+button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
 .btn {
   margin: 10px;
