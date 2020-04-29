@@ -34,7 +34,7 @@ const TaskListContextProvider = (props) => {
 
   const addTask = (title) => {
     setLoading(true);
-    const newTask = { title, blocked: false };
+    const newTask = { title, blocked: false, done: false };
     axios
       .post("./tasks.json", newTask)
       .then((response) => {
@@ -62,9 +62,9 @@ const TaskListContextProvider = (props) => {
       });
   };
 
-  const toggleBlock = (id) => {
+  const toggleHandler = (id, key) => {
     const taskToToggle = tasks.find((task) => task.id === id);
-    taskToToggle.blocked = !taskToToggle.blocked;
+    taskToToggle[key] = !taskToToggle[key];
     const newTasks = tasks.map((task) =>
       task.id === id ? taskToToggle : task
     );
@@ -108,7 +108,7 @@ const TaskListContextProvider = (props) => {
         findItem,
         editTask,
         editItem,
-        toggleBlock,
+        toggleHandler,
       }}
     >
       {props.children}
