@@ -6,16 +6,21 @@ const Task = ({ task }) => {
   let styleOnBlocked = null,
     styleOnDone = null,
     disableDoneButton = false,
+    disableBlockButton = false,
+    blockButtonTitle = "Block",
     doneButtonTitle = "Done";
 
   if (task.blocked) {
     styleOnBlocked = { backgroundColor: "Orange", color: "black" };
     doneButtonTitle = "Cannot close blocked task";
     disableDoneButton = true;
+    blockButtonTitle = "Unblock";
   }
   if (task.done) {
     styleOnDone = { textDecoration: "line-through" };
     doneButtonTitle = "Undone";
+    disableBlockButton = true;
+    blockButtonTitle = "Task already closed";
   }
 
   return (
@@ -37,8 +42,9 @@ const Task = ({ task }) => {
         </button>
         <button
           className="btn-ban task-btn"
+          disabled={disableBlockButton}
           onClick={() => toggleHandler(task.id, "blocked")}
-          title={task.blocked ? "UnBlock" : "Block"}
+          title={blockButtonTitle}
         >
           <i className="fa fa-ban" aria-hidden="true"></i>
         </button>
