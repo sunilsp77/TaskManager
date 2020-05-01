@@ -10,7 +10,7 @@ function TaskManager() {
   return (
     <>
       {userData.token === null && <Redirect to="/" />}
-      <div className="container">
+      <div className="container1">
         <div className="app-wrapper">
           <Header />
           <div className="main">

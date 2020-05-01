@@ -4,6 +4,8 @@ import Axios from "axios";
 import * as actionTypes from "../../actions/actionTypes";
 import { AuthContext } from "../../Context/AuthContext";
 import Header from "./Header";
+import Loader from "../../common/loader";
+import Alert from "../../common/Alert";
 
 export default function RegistrationForm(props) {
   const { userData, dispatch } = useContext(AuthContext);
@@ -75,20 +77,21 @@ export default function RegistrationForm(props) {
   };
 
   if (userData.loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
   let errorMessage = null;
   if (userData.error) {
-    errorMessage = <p>{userData.error.message}</p>;
+    errorMessage = <Alert text={userData.error.message} />;
   }
 
   return (
     <>
       {userData.token !== null && <Redirect to="/tasks" />}
       <Header title="Authentication" />
+
       <div className="container d-flex align-items-center flex-column">
+        {errorMessage}
         <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
-          {errorMessage}
           <form>
             <div className="form-group text-left">
               <label htmlFor="exampleInputEmail1">Email address</label>
@@ -116,17 +119,19 @@ export default function RegistrationForm(props) {
                 onChange={handleChange}
               />
             </div>
-
-            <button
-              onClick={handleSubmitClick}
-              type="submit"
-              className="btn btn-primary"
-            >
-              Authenticate
-            </button>
           </form>
-          <button className="btn btn-link" onClick={switchAuthModeHandler}>
-            SWITCH TO {isSignUp ? "SIGNIN" : "SIGNUP"}
+          <button
+            onClick={handleSubmitClick}
+            type="submit"
+            className="btn btn-primary"
+          >
+            {isSignUp ? "REGISTER" : "LOG IN"}
+          </button>
+          <button
+            className="btn btn-link btn-lg"
+            onClick={switchAuthModeHandler}
+          >
+            SWITCH TO {isSignUp ? "LOGIN" : "REGISTER"}
           </button>
         </div>
       </div>
