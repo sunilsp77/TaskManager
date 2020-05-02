@@ -56,6 +56,14 @@
   align-items: center;
   margin-bottom: 10px;
 }
+.list-group {
+  max-height: 365px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
 
 .list {
   /* width: 90%;
@@ -104,10 +112,6 @@ button:disabled,
 button[disabled] {
   opacity: 0.65;
   cursor: not-allowed;
-}
-
-.btn {
-  margin: 10px;
 }
 
 .add-task-btn {

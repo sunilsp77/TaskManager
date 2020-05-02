@@ -13,7 +13,7 @@ export default function RegistrationForm(props) {
     email: "",
     password: "",
   });
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const handleChange = (e) => {
     const { id, value } = e.target;
     setState((prevState) => ({

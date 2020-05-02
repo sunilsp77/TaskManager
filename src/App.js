@@ -4,14 +4,14 @@ import "./styles.css";
 import RegistrationForm from "./Components/Auth/RegistrationForm";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TaskManager from "../src/Components/TaskManager/TaskManager";
+import MyTasks from "./Components/TaskManager/MyTasks";
 
 export default function App() {
   return (
     <div>
       <Switch>
         <Route exact path="/" component={RegistrationForm} />
-        <Route path="/tasks" component={TaskManager} />
+        <Route path="/tasks" component={MyTasks} />
       </Switch>
       <ToastContainer autoClose={3000} hideProgressBar />
     </div>
