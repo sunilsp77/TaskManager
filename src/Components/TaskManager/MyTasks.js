@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { TaskListContext } from "../../Context/TaskListContext";
 import { AuthContext } from "../../Context/AuthContext";
 import { Redirect } from "react-router-dom";
-import { AUTH_LOGOUT } from "../../actions/actionTypes";
+import { logout } from "../../actions/AuthActions";
 import "../../styles.css";
 
 function MyTasks() {
@@ -127,9 +127,7 @@ function MyButton({
 
 function Navbar({ dispatch }) {
   const handleLogout = () => {
-    dispatch({
-      type: AUTH_LOGOUT,
-    });
+    dispatch(logout());
     return <Redirect to="/" />;
   };
   return (

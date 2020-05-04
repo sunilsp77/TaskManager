@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Redirect } from "react-router-dom";
-import Axios from "axios";
-import * as actionTypes from "../../actions/actionTypes";
+import { auth } from "../../actions/AuthActions";
 import { AuthContext } from "../../Context/AuthContext";
 import Header from "./Header";
 import Loader from "../../common/loader";
@@ -21,55 +20,10 @@ export default function RegistrationForm(props) {
       [id]: value,
     }));
   };
-  //////////Actions Start /////////////////////
-  const logout = () => {
-    dispatch({
-      type: actionTypes.AUTH_LOGOUT,
-    });
-  };
 
-  const checkAuthTimout = (expirationTime) => {
-    setTimeout(logout, expirationTime * 1000);
-  };
-
-  /////////////Actions End////////////////////////////
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    dispatch({
-      type: actionTypes.AUTH_START,
-    });
-    if (state.password) {
-      const authData = {
-        email: state.email,
-        password: state.password,
-        returnSecureToken: true,
-      };
-      let url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBe0xFmJaDolMCvCYCZbTzSO61V9asQBOg";
-      if (!isSignUp) {
-        url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBe0xFmJaDolMCvCYCZbTzSO61V9asQBOg";
-      }
-      Axios.post(url, authData)
-        .then((response) => {
-          const { idToken, localId, expiresIn } = response.data;
-          dispatch({
-            type: actionTypes.AUTH_SUCCESS,
-            idToken,
-            userId: localId,
-          });
-          checkAuthTimout(expiresIn);
-        })
-        .catch((err) => {
-          console.log(err);
-          dispatch({
-            type: actionTypes.AUTH_FAIL,
-            error: err.response.data.error,
-          });
-        });
-    } else {
-      console.log("Passwords do not match");
-    }
+    auth(state.email, state.password, isSignUp, dispatch);
   };
 
   const switchAuthModeHandler = () => {
